@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../shop_model.dart';
+import '../models/shop_model.dart';
 
 // variables
 String? shopName;

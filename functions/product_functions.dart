@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../cars_model.dart';
+import '../models/cars_model.dart';
 
 var currentProduct;
 int? selectedIndex;

@@ -1,5 +1,5 @@
-import 'models/functions/product_functions.dart';
-import 'models/functions/shop_functions.dart';
+import 'functions/product_functions.dart';
+import 'functions/shop_functions.dart';
 import 'models/shop_model.dart';
 
 void main(List<String> args) {
