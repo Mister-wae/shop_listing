@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import '../models/cars_model.dart';
+import '../models/clothing_model.dart';
+import '../models/house_model.dart';
+import '../models/customProduuct_model.dart';
 
 var currentProduct;
 int? selectedIndex;
@@ -26,11 +29,16 @@ void createProduct() {
 
   print("Do you wish to create another product?[yes/no]");
   String? response = stdin.readLineSync();
-  if (response == "yes") {
+  if (response != null && response.toLowerCase() != "no") {
+    response = response.toLowerCase();
     createProduct();
-  } else {
-    // create a function to display user's shop
-    // displayShop();
+  } else if (response != null && response.toLowerCase() == "no") {
+    print("Do you wish to view your shop?[yes/no]");
+    String? viewResponse = stdin.readLineSync();
+    if (viewResponse != null && viewResponse.toLowerCase() != "no") {
+      viewResponse = viewResponse.toLowerCase();
+      // displayShop();
+    }
   }
 }
 
@@ -214,13 +222,359 @@ createCarProduct() {
 }
 
 createClothingProduct() {
-  print("clothing created");
+  // get properties of the cloth
+  // cloth name
+  String? clothName;
+  bool clothNameHasError = false;
+  do {
+    print(clothNameHasError
+        ? "Invalid Input! Re-enter cloth name"
+        : "Enter cloth name");
+    clothName = stdin.readLineSync();
+    if (clothName == null) {
+      clothNameHasError = true;
+    } else if (clothName.isEmpty) {
+      clothNameHasError = true;
+    } else {
+      clothNameHasError = false;
+    }
+  } while (clothNameHasError);
+
+  // cloth color
+  String? clothColor;
+  bool clothColorHasError = false;
+  do {
+    print(clothColorHasError
+        ? "Invalid Input! Re-enter cloth color"
+        : "Enter cloth color");
+    clothColor = stdin.readLineSync();
+    if (clothColor == null) {
+      clothColorHasError = true;
+    } else if (clothColor.isEmpty) {
+      clothColorHasError = true;
+    } else {
+      clothColorHasError = false;
+    }
+  } while (clothColorHasError);
+
+  // cloth description
+  String? clothDescription;
+  bool clothDescriptionHasError = false;
+  do {
+    print(clothDescriptionHasError
+        ? "Invalid Input! Re-enter cloth description"
+        : "Enter cloth description");
+    clothDescription = stdin.readLineSync();
+    if (clothDescription == null) {
+      clothDescriptionHasError = true;
+    } else if (clothDescription.isEmpty) {
+      clothDescriptionHasError = true;
+    } else {
+      clothDescriptionHasError = false;
+    }
+  } while (clothDescriptionHasError);
+
+  // cloth price
+  String? clothPrice;
+  RegExp regExp = RegExp(r'^\d+$');
+  bool clothPriceHasError = false;
+  do {
+    print(clothDescriptionHasError
+        ? "Invalid Input! Re-enter cloth price"
+        : "Enter cloth price");
+    clothPrice = stdin.readLineSync();
+    if (clothPrice == null) {
+      clothPriceHasError = true;
+    } else if (clothPrice.isEmpty) {
+      clothPriceHasError = true;
+    } else if (!regExp.hasMatch(clothPrice)) {
+      clothPriceHasError = true;
+    } else {
+      clothPriceHasError = false;
+    }
+  } while (clothPriceHasError);
+
+  // cloth brand
+  List<String> clothBrands = Brand.values.map((_) {
+    return _.toString();
+  }).toList();
+  int? clothBrandIndex;
+  bool clothBrandIndexHasError = false;
+
+  do {
+    int i = 0;
+    print(
+        clothBrandIndexHasError ? "Invalid Input. Select one:" : "Select one:");
+    for (var brand in clothBrands) {
+      i++;
+      print("$i: ${brand.replaceRange(0, 6, '')}");
+    }
+    String? clothBrandIndexString = stdin.readLineSync();
+    if (clothBrandIndexString != null) {
+      if (!regExp.hasMatch(clothBrandIndexString)) {
+        clothBrandIndexHasError = true;
+      } else {
+        clothBrandIndex = int.parse(clothBrandIndexString) - 1;
+        if (selectedIndex! > 3 || selectedIndex! < 0) {
+          clothBrandIndexHasError = true;
+        } else {
+          clothBrandIndexHasError = false;
+        }
+      }
+    } else {
+      clothBrandIndexHasError = true;
+    }
+  } while (clothBrandIndexHasError);
+
+  // cloth sizes
+
+  List<String> clothSizes = Sizes.values.map((_) {
+    return _.toString();
+  }).toList();
+  int? clothSizesIndex;
+  bool clothSizesHasError = false;
+
+  do {
+    int i = 0;
+    print(clothSizesHasError ? "Invalid Input. Select one:" : "Select one:");
+    for (var type in clothSizes) {
+      i++;
+      print("$i: ${type.replaceRange(0, 6, '')}");
+    }
+    String? clothSizesIndexString = stdin.readLineSync();
+    if (clothSizesIndexString != null) {
+      if (!regExp.hasMatch(clothSizesIndexString)) {
+        clothSizesHasError = true;
+      } else {
+        clothSizesIndex = int.parse(clothSizesIndexString) - 1;
+        if (clothSizesIndex >= clothSizes.length || clothSizesIndex < 0) {
+          clothSizesHasError = true;
+        } else {
+          clothSizesHasError = false;
+        }
+      }
+    } else {
+      clothSizesHasError = true;
+    }
+  } while (clothSizesHasError);
+
+  currentProduct = Clothing(
+    name: clothName!,
+    color: clothColor!,
+    price: clothPrice!,
+    description: clothDescription!,
+    brand: Brand.values[clothBrandIndex!],
+    size: Sizes.values[clothSizesIndex!],
+  );
+
+  print("cloth Created SuccessFully!\n"
+      "Specifications:\n"
+      "cloth name: ${currentProduct.name}\n"
+      "cloth color: ${currentProduct.color}\n"
+      "cloth price: ₦${currentProduct.price}\n"
+      "${currentProduct.description}.\n'${currentProduct.brand.toString().replaceRange(0, 6, '')}'********'${currentProduct.size.toString().replaceRange(0, 6, '')}'.");
+  // create the cloth product.
 }
 
 createHouseProduct() {
-  print("house created");
+  String? houseName;
+  bool houseNameHasError = false;
+  do {
+    print(houseNameHasError
+        ? "Invalid Input! Re-enter house name"
+        : "Enter house name");
+    houseName = stdin.readLineSync();
+    if (houseName == null) {
+      houseNameHasError = true;
+    } else if (houseName.isEmpty) {
+      houseNameHasError = true;
+    } else {
+      houseNameHasError = false;
+    }
+  } while (houseNameHasError);
+
+  // house color
+  String? houseColor;
+  bool houseColorHasError = false;
+  do {
+    print(houseColorHasError
+        ? "Invalid Input! Re-enter house color"
+        : "Enter house color");
+    houseColor = stdin.readLineSync();
+    if (houseColor == null) {
+      houseColorHasError = true;
+    } else if (houseColor.isEmpty) {
+      houseColorHasError = true;
+    } else {
+      houseColorHasError = false;
+    }
+  } while (houseColorHasError);
+
+  // house description
+  String? houseDescription;
+  bool houseDescriptionHasError = false;
+  do {
+    print(houseDescriptionHasError
+        ? "Invalid Input! Re-enter house description"
+        : "Enter house description");
+    houseDescription = stdin.readLineSync();
+    if (houseDescription == null) {
+      houseDescriptionHasError = true;
+    } else if (houseDescription.isEmpty) {
+      houseDescriptionHasError = true;
+    } else {
+      houseDescriptionHasError = false;
+    }
+  } while (houseDescriptionHasError);
+
+  // house price
+  String? housePrice;
+  RegExp regExp = RegExp(r'^\d+$');
+  bool housePriceHasError = false;
+  do {
+    print(houseDescriptionHasError
+        ? "Invalid Input! Re-enter house price"
+        : "Enter house price");
+    housePrice = stdin.readLineSync();
+    if (housePrice == null) {
+      housePriceHasError = true;
+    } else if (housePrice.isEmpty) {
+      housePriceHasError = true;
+    } else if (!regExp.hasMatch(housePrice)) {
+      housePriceHasError = true;
+    } else {
+      housePriceHasError = false;
+    }
+  } while (housePriceHasError);
+
+  // house Type
+
+  List<String> houseTypes = HouseType.values.map((_) {
+    return _.toString();
+  }).toList();
+  int? houseTypeIndex;
+  bool houseTypeIndexHasError = false;
+
+  do {
+    int i = 0;
+    print(
+        houseTypeIndexHasError ? "Invalid Input. Select one:" : "Select one:");
+    print(
+        houseTypeIndexHasError ? "Invalid Input. Select one:" : "Select one:");
+    for (var type in houseTypes) {
+      i++;
+      print("$i: ${type.replaceRange(0, 10, '')}");
+    }
+    String? houseTypeIndexString = stdin.readLineSync();
+    if (houseTypeIndexString != null) {
+      if (!RegExp(r'^\d+$').hasMatch(houseTypeIndexString)) {
+        houseTypeIndexHasError = true;
+      } else {
+        houseTypeIndex = int.parse(houseTypeIndexString) - 1;
+        if (houseTypeIndex >= houseTypes.length || houseTypeIndex < 0) {
+          houseTypeIndexHasError = true;
+        } else {
+          houseTypeIndexHasError = false;
+        }
+      }
+    } else {
+      houseTypeIndexHasError = true;
+    }
+  } while (houseTypeIndexHasError);
+
+  currentProduct = Houses(
+    name: houseName!,
+    color: houseColor!,
+    price: housePrice!,
+    description: houseDescription!,
+    houseType: HouseType.values[houseTypeIndex!],
+  );
+
+  print("House Created Successfully!\n"
+      "Specifications:\n"
+      "House name: ${currentProduct.name}\n"
+      "House color: ${currentProduct.color}\n"
+      "House price: ₦${currentProduct.price}\n"
+      "House description: ${currentProduct.description}.\n"
+      "'${currentProduct.houseType.toString().replaceRange(0, 10, '')}'.");
 }
 
 createCustomProduct() {
-  print("custom created");
+  // get product name
+  String? productName;
+  bool productNameHasError = false;
+  do {
+    print(productNameHasError
+        ? "Invalid Input! Re-enter product name"
+        : "Enter product name");
+    productName = stdin.readLineSync();
+    if (productName == null || productName.isEmpty) {
+      productNameHasError = true;
+    } else {
+      productNameHasError = false;
+    }
+  } while (productNameHasError);
+
+  String? productColor;
+  bool productColorHasError = false;
+  do {
+    print(productColorHasError
+        ? "Invalid Input! Re-enter product color"
+        : "Enter product color");
+    productColor = stdin.readLineSync();
+    if (productColor == null) {
+      productColorHasError = true;
+    } else if (productColor.isEmpty) {
+      productColorHasError = true;
+    } else {
+      productColorHasError = false;
+    }
+  } while (productColorHasError);
+
+  // Get product description
+  String? productDescription;
+  bool productDescriptionHasError = false;
+  do {
+    print(productDescriptionHasError
+        ? "Invalid Input! Re-enter product description"
+        : "Enter product description");
+    productDescription = stdin.readLineSync();
+    if (productDescription == null || productDescription.isEmpty) {
+      productDescriptionHasError = true;
+    } else {
+      productDescriptionHasError = false;
+    }
+  } while (productDescriptionHasError);
+
+  // Get product price
+  String? productPrice;
+  RegExp regExp = RegExp(r'^\d+$');
+  bool productPriceHasError = false;
+  do {
+    print(productPriceHasError
+        ? "Invalid Input! Re-enter product price"
+        : "Enter product price");
+    productPrice = stdin.readLineSync();
+    if (productPrice == null ||
+        productPrice.isEmpty ||
+        !regExp.hasMatch(productPrice)) {
+      productPriceHasError = true;
+    } else {
+      productPriceHasError = false;
+    }
+  } while (productPriceHasError);
+
+  currentProduct = CustomProduct(
+    name: productName!,
+    color: productColor!,
+    price: productPrice!,
+    description: productDescription!,
+  );
+
+  // Display the created product
+  print("Custom Product Created Successfully!\n"
+      "Specifications:\n"
+      "Product name: ${currentProduct.name}\n"
+      "Product description: ${currentProduct.description}\n"
+      "Product price: ₦${currentProduct.price}\n");
 }
