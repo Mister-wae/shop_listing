@@ -4,9 +4,12 @@ import '../models/cars_model.dart';
 import '../models/clothing_model.dart';
 import '../models/house_model.dart';
 import '../models/customProduuct_model.dart';
+import 'shop_functions.dart';
 
 var currentProduct;
 int? selectedIndex;
+
+List products = [];
 
 List<String> productsType = ["Cars", "Clothing", "House", "Custom Product"];
 
@@ -26,7 +29,7 @@ void createProduct() {
     default:
       0;
   }
-
+  products.add(currentProduct);
   print("Do you wish to create another product?[yes/no]");
   String? response = stdin.readLineSync();
   if (response != null && response.toLowerCase() != "no") {
@@ -36,8 +39,7 @@ void createProduct() {
     print("Do you wish to view your shop?[yes/no]");
     String? viewResponse = stdin.readLineSync();
     if (viewResponse != null && viewResponse.toLowerCase() != "no") {
-      viewResponse = viewResponse.toLowerCase();
-      // displayShop();
+      displayProducts();
     }
   }
 }
@@ -367,11 +369,11 @@ createClothingProduct() {
     size: Sizes.values[clothSizesIndex!],
   );
 
-  print("cloth Created SuccessFully!\n"
+  print("Clothing Created SuccessFully!\n"
       "Specifications:\n"
-      "cloth name: ${currentProduct.name}\n"
-      "cloth color: ${currentProduct.color}\n"
-      "cloth price: ₦${currentProduct.price}\n"
+      "Clothing name: ${currentProduct.name}\n"
+      "Clothing color: ${currentProduct.color}\n"
+      "Clothing price: ₦${currentProduct.price}\n"
       "${currentProduct.description}.\n'${currentProduct.brand.toString().replaceRange(0, 6, '')}'********'${currentProduct.size.toString().replaceRange(0, 6, '')}'.");
   // create the cloth product.
 }
@@ -577,4 +579,53 @@ createCustomProduct() {
       "Product name: ${currentProduct.name}\n"
       "Product description: ${currentProduct.description}\n"
       "Product price: ₦${currentProduct.price}\n");
+}
+
+void displayProducts() {
+  print("${shopName?.toUpperCase()}\n");
+  print("Address: $address");
+  print("Products");
+
+  for (var i = 0; i < products.length; i++) {
+    print("${i + 1}: ${products[i].name}");
+  }
+
+  print("Select number to view product or press [Enter] to end program");
+  RegExp regExp = RegExp(r'^\d+$');
+  String? number = stdin.readLineSync();
+  if (number != null && regExp.hasMatch(number)) {
+    var thisProduct = products[int.parse(number)];
+    if (thisProduct is Cars) {
+      print(
+          "Car name: ${thisProduct.name}\nCar color: ${thisProduct.color}\nCar price: ₦${thisProduct.price}\n${thisProduct.description}.\n '${thisProduct.carBrand.toString().replaceRange(0, 9, '')}'••••••'${thisProduct.carType.toString().replaceRange(0, 8, '')}'.");
+    } else if (thisProduct is Clothing) {
+      print(
+        (
+          "Clothing name: ${thisProduct.name}\n"
+              "Clothing color: ${thisProduct.color}\n"
+              "Clothing price: ₦${thisProduct.price}\n"
+              "${thisProduct.description}.\n'${thisProduct.brand.toString().replaceRange(0, 6, '')}'********'${currentProduct.size.toString().replaceRange(0, 6, '')}'.",
+        ),
+      );
+    } else if (thisProduct is Houses) {
+      print(
+        "House name: ${thisProduct.name}\n"
+        "House color: ${thisProduct.color}\n"
+        "House price: ₦${thisProduct.price}\n"
+        "House description: ${thisProduct.description}.\n"
+        "'${thisProduct.houseType.toString().replaceRange(0, 10, '')}'.",
+      );
+    } else if (thisProduct is CustomProduct) {
+      print(
+        "Product name: ${thisProduct.name}\n"
+        "Product description: ${thisProduct.description}\n"
+        "Product price: ₦${thisProduct.price}\n",
+      );
+    }
+
+    print("OTHERS");
+    for (var i = 0; i < products.length; i++) {
+      print("${i + 1}: ${products[i].name}");
+    }
+  }
 }
